@@ -1,1 +1,3 @@
-from .db import DataAccessSdk
+from .db import DataAccessSDK
+
+__all__ = ["DataAccessSDK"]
