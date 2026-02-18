@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+src/Data/config.py
+src/Data/db.py
+src/Data/http/__init__.py
+src/Data/http/client.py
+src/Data/http/manejo_errores.py
+src/Data/resources/Empleados.py
+src/Data/resources/__init__.py
+src/Data/resources/base.py
+src/data_access_sdk.egg-info/PKG-INFO
+src/data_access_sdk.egg-info/SOURCES.txt
+src/data_access_sdk.egg-info/dependency_links.txt
+src/data_access_sdk.egg-info/requires.txt
+src/data_access_sdk.egg-info/top_level.txt

@@ -1,0 +1,21 @@
+Metadata-Version: 2.4
+Name: data-access-sdk
+Version: 0.1.0
+Summary: Official Python SDK for the centralized Data Access Service (NestJS) over PostgreSQL (Neon).
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.31.0
+
+# data-access-sdk
+
+SDK oficial en Python para consumir el **Data Access Service centralizado** (NestJS).
+- No permite SQL
+- API Key automática en `x-api-key`
+- Cliente HTTP central con `requests.Session`
+- Errores HTTP -> excepciones Python
+- Diseño por dominios (resources) para escalar módulos
+
+## Instalación local
+```bash
+pip install -e .
