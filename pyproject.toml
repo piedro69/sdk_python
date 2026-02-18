@@ -9,7 +9,6 @@ description = "Official Python SDK for the centralized Data Access Service (Nest
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "Your Company", email = "" }]
 dependencies = [
   "requests>=2.31.0"
 ]
