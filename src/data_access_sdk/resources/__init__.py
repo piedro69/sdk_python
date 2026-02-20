@@ -1,4 +1,4 @@
 from .Empleados import EmpleadosResource
-
-__all__ = ["EmpleadosResource"]
+from .Proveedores import ProveedoresResource
+__all__ = ["EmpleadosResource", "ProveedoresResource"]
 
