@@ -1,11 +1,8 @@
 from __future__ import annotations
-
 from typing import Any, Dict, Optional, Tuple, Union
 import requests
-
 from ..config import SDKConfig
 from .manejo_errores import ApiError, map_http_error
-
 JsonType = Union[Dict[str, Any], list, str, int, float, bool, None]
 
 class HttpClient:
@@ -14,11 +11,13 @@ class HttpClient:
         self._session = requests.Session()
         self._base_url = self._normalize_base_url(config.base_url)
 
-        self._session.headers.update({
-            "x-api-key": config.api_key,
-            "User-Agent": config.user_agent,
-            "Accept": "application/json",
-        })
+        self._session.headers.update(
+            {
+                "X-API-Key": config.api_key,
+                "User-Agent": config.user_agent,
+                "Accept": "application/json",
+            }
+        )
 
     def close(self) -> None:
         self._session.close()
@@ -56,11 +55,19 @@ class HttpClient:
                 json=json,
                 timeout=self._config.timeout_seconds,
             )
+        except requests.exceptions.Timeout:
+            raise ApiError(
+                status_code=0,
+                message=f"Timeout after {self._config.timeout_seconds}s",
+                details=None,
+                request_id=None,
+                url=url,
+            )
         except requests.RequestException as e:
             raise ApiError(
                 status_code=0,
-                message=f"Network error: {str(e)}",
-                details=None,
+                message=f"Network error: {type(e).__name__}",
+                details=str(e),
                 request_id=None,
                 url=url,
             )
@@ -73,9 +80,12 @@ class HttpClient:
     def _parse_success(self, resp: requests.Response) -> Any:
         if resp.status_code == 204:
             return None
+
         content_type = resp.headers.get("Content-Type", "")
+
         if "application/json" in content_type:
             return resp.json()
+
         text = resp.text
         if text == "":
             return None
@@ -86,6 +96,7 @@ class HttpClient:
         content_type = resp.headers.get("Content-Type", "")
 
         message, details = self._parse_error_body(resp, content_type)
+
         return map_http_error(
             status_code=resp.status_code,
             message=message,
@@ -107,16 +118,20 @@ class HttpClient:
         text = resp.text.strip()
         if text != "":
             return (text, text)
+
         return (f"HTTP error {resp.status_code}", None)
 
     def _pick_message(self, data: Any) -> str:
         if isinstance(data, dict):
-            if "message" in data and isinstance(data["message"], str):
-                return data["message"]
-            if "error" in data and isinstance(data["error"], str):
-                return data["error"]
-            if "detail" in data and isinstance(data["detail"], str):
-                return data["detail"]
+            val = data.get("message")
+            if isinstance(val, str):
+                return val
+            err = data.get("error")
+            if isinstance(err, str):
+                return err
+            det = data.get("detail")
+            if isinstance(det, str):
+                return det
         return "Request failed"
 
     def _build_url(self, path: str) -> str:
